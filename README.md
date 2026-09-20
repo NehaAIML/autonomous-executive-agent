@@ -1,5 +1,8 @@
 # Autonomous Executive Gmail Intelligence Agent
 
+![Autonomous Executive Agent](assets/social_preview.jpg)
+
+
 > A zero-cost, scheduled email summarization pipeline powered by **Llama 3.1** (Groq / local Ollama) and **GitHub Actions**. Delivers an actionable executive briefing to your inbox daily at 8:00 AM without requiring a local machine running 24/7.
 
 ---
