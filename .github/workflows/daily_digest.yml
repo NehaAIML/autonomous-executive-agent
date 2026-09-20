@@ -2,68 +2,44 @@ name: Daily Executive Email Digest
 
 on:
   schedule:
-    # 12:00 UTC = 8:00 AM EDT
     - cron: '0 12 * * *'
   workflow_dispatch:
 
 jobs:
   run-digest:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check out repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          pip install google-api-python-client google-auth-oauthlib google-auth-httplib2 pydantic groq ollama
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Validate and unpack secrets
+      - name: Validate and Unpack Secrets
         env:
           GMAIL_CREDENTIALS: ${{ secrets.GMAIL_CREDENTIALS }}
           GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
-          python3 -c "
-          import os, json, sys
-
-          creds = os.environ.get('GMAIL_CREDENTIALS', '').strip()
-          token = os.environ.get('GMAIL_TOKEN', '').strip()
-          groq_k = os.environ.get('GROQ_API_KEY', '').strip()
-
-          errors = []
-          if not groq_k.startswith('gsk_'):
-              errors.append('GROQ_API_KEY must start with gsk_.')
-          try:
-              c_data = json.loads(creds)
-              if 'installed' not in c_data and 'web' not in c_data:
-                  errors.append('GMAIL_CREDENTIALS missing installed/web client config.')
-          except Exception:
-              errors.append('GMAIL_CREDENTIALS is not valid JSON.')
-          try:
-              t_data = json.loads(token)
-              if 'refresh_token' not in t_data:
-                  errors.append('GMAIL_TOKEN missing refresh_token.')
-          except Exception:
-              errors.append('GMAIL_TOKEN is not valid JSON.')
-
-          if errors:
-              for err in errors:
-                  print(f'[!] {err}')
-              sys.exit(1)
-          print('[✓] Secrets verified.')
-          "
+          if [ -z "$GMAIL_CREDENTIALS" ] || [ -z "$GMAIL_TOKEN" ] || [ -z "$GROQ_API_KEY" ]; then
+            echo "Missing required repository secrets."
+            exit 1
+          fi
           echo "$GMAIL_CREDENTIALS" > credentials.json
           echo "$GMAIL_TOKEN" > token.json
-          echo "$GMAIL_CREDENTIALS" > gmail-agent/credentials.json
-          echo "$GMAIL_TOKEN" > gmail-agent/token.json
+          echo "Secrets unpacked successfully."
 
       - name: Run Executive Email Agent
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
-          python gmail-agent/email_agent.py
+          python email_agent.py
