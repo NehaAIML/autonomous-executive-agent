@@ -7,6 +7,26 @@
 
 ---
 
+
+---
+
+## Enterprise & Private VPC Deployments
+
+While this repository is fully functional for personal and developer workflows, running agentic pipelines across enterprise inboxes requires strict data governance, isolated compute, and corporate identity federation.
+
+We design and deploy production-grade, zero-trust configurations tailored for leadership teams, family offices, and regulated industries:
+
+* **Private Cloud Isolation**: Deployed entirely inside your corporate AWS, GCP, or Azure perimeter (VPC) with zero data leaving your boundary.
+* **Model Privacy & Air-Gapping**: Self-hosted open-weight LLMs (Llama 3.1 via vLLM/Ollama) with strictly zero third-party API exposure or data retention.
+* **Enterprise Mailbox Connectors**: Seamless integration with Google Workspace enterprise domains and Microsoft 365 / Exchange environments via enterprise OAuth/SAML.
+* **Custom Semantic Schemas**: Specialized extraction models for deal-flow tracking (VC/PE), regulatory/contract deadlines (Legal), and C-suite escalations.
+* **Day-2 Governance**: Automated OAuth token renewal, audit logging, failover monitoring, and strict role-based access control (RBAC).
+
+**Interested in deploying an isolated intelligence agent for your executive team?**  
+Reach out via [LinkedIn](https://www.linkedin.com) or open an inquiry in [GitHub Discussions](https://github.com/NehaAIML/autonomous-executive-agent/discussions).
+
+---
+
 ## Architecture Overview
 
 ```
